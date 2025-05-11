@@ -213,69 +213,68 @@ html_code = """
   </div>
 
   <!-- Gantt Chart Section -->
- <!-- 🔄 FullCalendar Timeline Replacement for Gantt -->
-<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.css' rel='stylesheet' />
-<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.7/index.global.min.css' rel='stylesheet' />
+# Full HTML code block with FullCalendar timeline scheduler
+html_code = """
+<!-- Include FullCalendar and Scheduler (Premium) via CDN -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.9/index.global.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.9/index.global.min.js"></script>
 
-<div style="margin-top: 60px;">
-  <h2>Lunes</h2>
-  <div id="calendar" style="max-width: 100%; margin-top: 20px;"></div>
-</div>
-
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.7/index.global.min.js'></script>
+<!-- Gantt Calendar Container -->
+<div id="timeline-calendar" style="max-width: 100%; margin: 40px auto;"></div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
+    const calendarEl = document.getElementById('timeline-calendar');
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives', // Free demo license
       initialView: 'resourceTimelineDay',
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'resourceTimelineDay,resourceTimelineWeek'
-      },
+      height: 'auto',
+      now: '2024-05-01',
       slotMinTime: "06:00:00",
-      slotMaxTime: "30:00:00", // 06 + 24
+      slotMaxTime: "24:00:00",
       resourceAreaHeaderContent: 'Colaboradores',
       resources: [
-        { id: '1', title: 'Aitana Lopez' },
-        { id: '2', title: 'Ariadna Cavajal' },
-        { id: '3', title: 'Samuel Guzman' },
-        { id: '4', title: 'Samuel Ficticio' },
-        { id: '5', title: 'David Martinez' },
-        { id: '6', title: 'Juan Carlos' }
+        { id: 'a', title: 'Aitana Lopez' },
+        { id: 'b', title: 'Ariadna Cavajal' },
+        { id: 'c', title: 'David Martinez' },
+        { id: 'd', title: 'Juan Carlos' },
+        { id: 'e', title: 'Samuel Guzman' },
+        { id: 'f', title: 'Samuel Ficticio' },
       ],
       events: [
         {
-          id: 'a',
-          resourceId: '1',
-          start: '2025-05-13T13:00:00',
-          end: '2025-05-13T16:00:00',
+          id: '1',
+          resourceId: 'a',
+          start: '2024-05-01T13:00:00',
+          end: '2024-05-01T16:00:00',
           title: '3h X',
-          color: '#ffe28a'
+          color: '#FACC15',
         },
         {
-          id: 'b',
-          resourceId: '2',
-          start: '2025-05-13T13:00:00',
-          end: '2025-05-13T18:00:00',
+          id: '2',
+          resourceId: 'b',
+          start: '2024-05-01T14:00:00',
+          end: '2024-05-01T19:00:00',
           title: '5h X',
-          color: '#ffe28a'
+          color: '#FACC15',
         }
       ],
       editable: true,
-      selectable: true,
-      nowIndicator: true,
-      height: "auto",
-      aspectRatio: 2
+      resourceAreaWidth: '20%',
+      headerToolbar: {
+        left: '',
+        center: 'title',
+        right: ''
+      }
     });
 
     calendar.render();
   });
 </script>
+
 
 </body>
 </html>
