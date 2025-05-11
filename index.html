@@ -173,69 +173,160 @@
     </div>
   </div>
   <!-- 🔽 INSERT THE GANTT COMPONENT HERE 🔽 -->
-<h2 style="margin-top: 60px; margin-left: 20px;">Lunes</h2>
-<div style="overflow-x: auto; padding: 0 20px;">
-  <table style="border-collapse: collapse; font-family: Arial, sans-serif; min-width: 1000px; width: max-content;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Interactive Gantt Timeline – Lunes</title>
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      padding: 40px;
+      margin: 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      min-width: 1000px;
+    }
+
+    th, td {
+      border: 1px solid #e0e0e0;
+      padding: 4px;
+      font-size: 12px;
+    }
+
+    th {
+      background: #f0f0f0;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    td:first-child, th:first-child {
+      text-align: left;
+      padding-left: 8px;
+    }
+
+    .shift-block {
+      background: #ffe28a;
+      border: 1px solid #ccc;
+      font-size: 12px;
+      padding: 4px 0;
+      text-align: center;
+      cursor: move;
+      position: relative;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+<h2 style="margin-bottom: 16px;">Lunes</h2>
+<div style="overflow-x: auto;">
+  <table>
     <thead>
       <tr>
-        <th style="background: #f0f0f0; padding: 4px 8px; text-align: left;">Colaboradores</th>
-        <th style="background: #f0f0f0;">Hr.</th>
-        <th style="background: #f0f0f0;">BH</th>
-        <!-- 06:00 to 05:00 -->
-        <th style="background: #f0f0f0;">06</th>
-        <th style="background: #f0f0f0;">07</th>
-        <th style="background: #f0f0f0;">08</th>
-        <th style="background: #f0f0f0;">09</th>
-        <th style="background: #f0f0f0;">10</th>
-        <th style="background: #f0f0f0;">11</th>
-        <th style="background: #f0f0f0;">12</th>
-        <th style="background: #f0f0f0;">13</th>
-        <th style="background: #f0f0f0;">14</th>
-        <th style="background: #f0f0f0;">15</th>
-        <th style="background: #f0f0f0;">16</th>
-        <th style="background: #f0f0f0;">17</th>
-        <th style="background: #f0f0f0;">18</th>
-        <th style="background: #f0f0f0;">19</th>
-        <th style="background: #f0f0f0;">20</th>
-        <th style="background: #f0f0f0;">21</th>
-        <th style="background: #f0f0f0;">22</th>
-        <th style="background: #f0f0f0;">23</th>
-        <th style="background: #f0f0f0;">00</th>
-        <th style="background: #f0f0f0;">01</th>
-        <th style="background: #f0f0f0;">02</th>
-        <th style="background: #f0f0f0;">03</th>
-        <th style="background: #f0f0f0;">04</th>
-        <th style="background: #f0f0f0;">05</th>
+        <th>Colaboradores</th>
+        <th>Hr.</th>
+        <th>BH</th>
+        <!-- Hours 06–05 -->
+        ${[...Array(24)].map((_, i) => `<th>${(i + 6) % 24}</th>`).join('')}
       </tr>
     </thead>
     <tbody>
-      <!-- Employee Row 1 -->
+      <!-- Employee: Aitana Lopez -->
       <tr>
-        <td style="font-weight: bold;">Aitana Lopez</td>
-        <td style="text-align: center;">4.5</td>
-        <td style="text-align: center;">32</td>
-        <td colspan="7"></td>
-        <td colspan="3" style="background: #ffe28a; text-align: center; font-size: 11px;">3h X</td>
-        <td colspan="16"></td>
+        <td>Aitana Lopez</td>
+        <td>4.5</td>
+        <td>32</td>
+        <!-- 13 empty slots -->
+        ${[...Array(7)].map(() => `<td></td>`).join('')}
+        <!-- Shift block: 3h X -->
+        <td colspan="3" style="position: relative;">
+          <div class="shift-block" style="width: 240px;" data-x="0">3h X</div>
+        </td>
+        ${[...Array(14)].map(() => `<td></td>`).join('')}
       </tr>
-      <!-- Employee Row 2 -->
+
+      <!-- Employee: Ariadna Cavajal -->
       <tr>
-        <td style="font-weight: bold;">Ariadna Cavajal</td>
-        <td style="text-align: center;">3.0</td>
-        <td style="text-align: center;">20</td>
-        <td colspan="9"></td>
-        <td colspan="5" style="background: #ffe28a; text-align: center; font-size: 11px;">5h X</td>
-        <td colspan="12"></td>
+        <td>Ariadna Cavajal</td>
+        <td>3.0</td>
+        <td>20</td>
+        ${[...Array(9)].map(() => `<td></td>`).join('')}
+        <!-- Shift block: 5h X -->
+        <td colspan="5" style="position: relative;">
+          <div class="shift-block" style="width: 400px;" data-x="0">5h X</div>
+        </td>
+        ${[...Array(10)].map(() => `<td></td>`).join('')}
       </tr>
-      <!-- Demand Row -->
+
+      <!-- Demand row -->
       <tr>
-        <td style="font-weight: bold;">Demand</td>
+        <td>Demand</td>
         <td colspan="2"></td>
-        <td colspan="24" style="font-size: 11px; background: #f5f5f5; text-align: center;">⚠️ Understaffed / ✅ OK alternating here</td>
+        ${[...Array(24)].map((_, i) =>
+          `<td style="text-align: center; font-size: 11px;">${i % 4 === 0 ? '⚠️' : '✅'}</td>`
+        ).join('')}
       </tr>
     </tbody>
   </table>
 </div>
+
+<script>
+  interact('.shift-block')
+    .draggable({
+      inertia: true,
+      modifiers: [
+        interact.modifiers.snap({
+          targets: [interact.snappers.grid({ x: 80, y: 1 })],
+          range: Infinity,
+          relativePoints: [{ x: 0, y: 0 }]
+        }),
+        interact.modifiers.restrictRect({
+          restriction: 'parent',
+          endOnly: true
+        })
+      ],
+      listeners: {
+        move(event) {
+          const target = event.target;
+          const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+          target.style.transform = `translateX(${x}px)`;
+          target.setAttribute('data-x', x);
+        }
+      }
+    })
+    .resizable({
+      edges: { left: true, right: true },
+      modifiers: [
+        interact.modifiers.snapSize({
+          targets: [interact.snappers.grid({ width: 80, height: 1 })]
+        })
+      ],
+      listeners: {
+        move(event) {
+          const target = event.target;
+          let { x } = target.dataset;
+          x = parseFloat(x) || 0;
+
+          // Update the element's style
+          target.style.width = event.rect.width + 'px';
+
+          // Optionally keep it draggable while resizing
+          const newX = x + event.deltaRect.left;
+          target.style.transform = `translateX(${newX}px)`;
+          target.setAttribute('data-x', newX);
+        }
+      }
+    });
+</script>
+
+</body>
+</html>
+
 
 <!-- 🔽 Ending THE GANTT COMPONENT HERE 🔽 -->
 
