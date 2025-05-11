@@ -1,8 +1,11 @@
+# Combine the weekly card grid and the weekly console (Gantt-style) into one valid HTML document
+
+final_combined_html = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Weekly Summary Dashboard</title>
+  <title>Weekly Summary Dashboard + Weekly Console</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,11 +14,13 @@
       margin: 0;
     }
 
+    /* Weekly Cards Grid */
     .grid {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 20px;
-      justify-content: center;
+      overflow-x: auto;
+      padding-bottom: 40px;
     }
 
     .card {
@@ -26,6 +31,7 @@
       overflow: hidden;
       cursor: pointer;
       transition: box-shadow 0.2s ease;
+      flex-shrink: 0;
     }
 
     .card:hover {
@@ -111,90 +117,16 @@
       font-size: 11px;
       color: #666;
     }
-  </style>
-</head>
-<body>
-  <div style="overflow-x: auto;">
-    <div class="grid" style="flex-wrap: nowrap; min-width: max-content;">
-      
-      <!-- Weeks 14 to 26 -->
-      <script>
-        const weeks = [
-          { week: 14, date: "Apr 1 – Apr 7" },
-          { week: 15, date: "Apr 8 – Apr 14" },
-          { week: 16, date: "Apr 15 – Apr 21" },
-          { week: 17, date: "Apr 22 – Apr 28" },
-          { week: 18, date: "Apr 29 – May 5" },
-          { week: 19, date: "May 6 – May 12" },
-          { week: 20, date: "May 13 – May 19" },
-          { week: 21, date: "May 20 – May 26" },
-          { week: 22, date: "May 27 – Jun 2" },
-          { week: 23, date: "Jun 3 – Jun 9" },
-          { week: 24, date: "Jun 10 – Jun 16" },
-          { week: 25, date: "Jun 17 – Jun 23" },
-          { week: 26, date: "Jun 24 – Jun 30" },
-        ];
 
-        weeks.forEach(({ week, date }) => {
-          document.write(`
-            <div class="card" onclick="handleClick('Week ${week}')">
-              <div class="card-header">
-                <h2>Week ${week}</h2>
-                <p>${date}</p>
-              </div>
-              <div class="card-body">
-                <div class="section">
-                  <h3>Workforce</h3>
-                  <div class="grid-3">
-                    <div><p class="label">Forecasted</p><p class="value">336h</p></div>
-                    <div><p class="label">Scheduled</p><p class="value">328h</p></div>
-                    <div><p class="label">Delta</p><p class="value" style="color: orange;">-8h</p></div>
-                  </div>
-                </div>
-                <div class="section">
-                  <h3>Revenue</h3>
-                  <div class="grid-3">
-                    <div><p class="label">Forecast</p><p class="value">€108,750</p></div>
-                    <div><p class="label">Realized</p><p class="value">€110,200</p></div>
-                    <div><p class="label">Progression</p><p class="value" style="color: green;">+1.3%</p></div>
-                  </div>
-                </div>
-                <div class="section">
-                  <h3>Events</h3>
-                  <div class="event"><div class="dot green"></div><div><div class="event-title">Golden day</div><div class="event-detail">Tuesday</div></div></div>
-                  <div class="event"><div class="dot orange"></div><div><div class="event-title">Delivery</div><div class="event-detail">Wednesday</div></div></div>
-                </div>
-              </div>
-            </div>
-          `);
-        });
-      </script>
-
-    </div>
-  </div>
-  <!-- 🔽 INSERT THE GANTT COMPONENT HERE 🔽 -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Weekly Console</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .section {
+    /* Weekly Console Styling */
+    .console-container {
       background: #fff;
       border: 1px solid #ddd;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-      margin-bottom: 20px;
     }
 
-    .section-header {
+    .console-header {
       padding: 16px;
       display: flex;
       justify-content: space-between;
@@ -202,20 +134,20 @@
       cursor: pointer;
     }
 
-    .section-title {
-      display: flex;
-      align-items: center;
+    .console-title {
       font-size: 18px;
       font-weight: bold;
       color: #333;
+      display: flex;
+      align-items: center;
     }
 
-    .section-title span {
+    .console-title span {
       margin-right: 8px;
       color: #2563eb;
     }
 
-    .section-content {
+    .console-content {
       padding: 16px;
       border-top: 1px solid #eee;
       display: none;
@@ -228,7 +160,7 @@
       padding-bottom: 8px;
     }
 
-    .card {
+    .console-card {
       min-width: 320px;
       max-width: 380px;
       border: 1px solid #ddd;
@@ -239,11 +171,11 @@
       transition: box-shadow 0.2s;
     }
 
-    .card:hover {
+    .console-card:hover {
       box-shadow: 0 4px 8px rgba(0,0,0,0.12);
     }
 
-    .card-header {
+    .console-card-header {
       background: #f8f8f8;
       border-bottom: 1px solid #eee;
       padding: 12px;
@@ -251,7 +183,7 @@
       justify-content: space-between;
     }
 
-    .card-body {
+    .console-card-body {
       max-height: 300px;
       overflow-y: auto;
       padding: 16px;
@@ -273,27 +205,12 @@
       gap: 8px;
     }
 
-    .label {
-      font-size: 11px;
-      color: #888;
-    }
-
-    .value {
-      font-weight: bold;
-      font-size: 13px;
-    }
-
     .delta-up {
       color: green;
     }
 
     .delta-down {
       color: #e67e22;
-    }
-
-    .event {
-      border-bottom: 1px solid #eee;
-      padding: 4px 0;
     }
 
     .event-dot {
@@ -307,32 +224,70 @@
     .green-dot {
       background: #28a745;
     }
-
-    .tooltip {
-      font-size: 11px;
-      color: #666;
-    }
   </style>
 </head>
 <body>
 
-  <div class="section">
-    <div class="section-header" onclick="toggleWeeklyConsole()">
-      <div class="section-title">
+  <!-- Weekly Cards Grid -->
+  <div class="grid">
+    <script>
+      const weeks = Array.from({ length: 13 }, (_, i) => ({
+        week: 14 + i,
+        date: `Week ${14 + i} date range`
+      }));
+
+      weeks.forEach(({ week, date }) => {
+        document.write(`
+          <div class="card" onclick="handleClick('Week ${week}')">
+            <div class="card-header">
+              <h2>Week ${week}</h2>
+              <p>${date}</p>
+            </div>
+            <div class="card-body">
+              <div class="section">
+                <h3>Workforce</h3>
+                <div class="grid-3">
+                  <div><p class="label">Forecasted</p><p class="value">336h</p></div>
+                  <div><p class="label">Scheduled</p><p class="value">328h</p></div>
+                  <div><p class="label">Delta</p><p class="value" style="color: orange;">-8h</p></div>
+                </div>
+              </div>
+              <div class="section">
+                <h3>Revenue</h3>
+                <div class="grid-3">
+                  <div><p class="label">Forecast</p><p class="value">€108,750</p></div>
+                  <div><p class="label">Realized</p><p class="value">€110,200</p></div>
+                  <div><p class="label">Progression</p><p class="value" style="color: green;">+1.3%</p></div>
+                </div>
+              </div>
+              <div class="section">
+                <h3>Events</h3>
+                <div class="event"><div class="dot green"></div><div><div class="event-title">Golden day</div><div class="event-detail">Tuesday</div></div></div>
+                <div class="event"><div class="dot orange"></div><div><div class="event-title">Delivery</div><div class="event-detail">Wednesday</div></div></div>
+              </div>
+            </div>
+          </div>
+        `);
+      });
+    </script>
+  </div>
+
+  <!-- Weekly Console Section -->
+  <div class="console-container">
+    <div class="console-header" onclick="toggleWeeklyConsole()">
+      <div class="console-title">
         <span>📅</span> Weekly Console – Short-Term Review
       </div>
       <button id="toggleButton">▼</button>
     </div>
-    <div class="section-content" id="weeklyConsole">
+    <div class="console-content" id="weeklyConsole">
       <div class="scroll-area">
-        
-        <!-- Week Card -->
-        <div class="card">
-          <div class="card-header">
+        <div class="console-card">
+          <div class="console-card-header">
             <strong>Week 31</strong>
             <span>Apr 3 – Apr 9</span>
           </div>
-          <div class="card-body">
+          <div class="console-card-body">
             <div class="card-section">
               <h4>Workforce</h4>
               <div class="card-grid">
@@ -341,7 +296,6 @@
                 <div><div class="label">Delta</div><div class="value delta-up">+30h</div></div>
               </div>
             </div>
-
             <div class="card-section">
               <h4>Revenue</h4>
               <div class="card-grid">
@@ -350,32 +304,26 @@
                 <div><div class="label">Progression</div><div class="value delta-down">-3.6%</div></div>
               </div>
             </div>
-
             <div class="card-section">
               <h4>Affinity Rate</h4>
-              <div class="card-grid">
-                <div class="tooltip" title="How well your scheduled hours match traffic patterns.">
-                  <div class="label">Affinity Rate</div>
-                  <div class="value">85%</div>
-                </div>
-              </div>
+              <div><div class="label">Alignment</div><div class="value">85%</div></div>
             </div>
-
             <div class="card-section">
               <h4>Events</h4>
-              <div class="event"><span class="event-dot green-dot"></span> Local Marathon</div>
-              <div class="event"><span class="event-dot green-dot"></span> Truck Delivery</div>
+              <div><span class="event-dot green-dot"></span> Local Marathon</div>
+              <div><span class="event-dot green-dot"></span> Truck Delivery</div>
             </div>
           </div>
         </div>
-
-        <!-- Duplicate this block for more weeks as needed -->
-
       </div>
     </div>
   </div>
 
   <script>
+    function handleClick(week) {
+      alert("Clicked on " + week);
+    }
+
     function toggleWeeklyConsole() {
       const content = document.getElementById("weeklyConsole");
       const button = document.getElementById("toggleButton");
@@ -388,19 +336,13 @@
       }
     }
 
-    // By default, make it visible
+    // Show Weekly Console by default
     document.getElementById("weeklyConsole").style.display = "block";
   </script>
 </body>
 </html>
+"""
 
-<!-- 🔽 Ending THE GANTT COMPONENT HERE 🔽 -->
-
-</script>
-</body>
-  <script>
-    function handleClick(week) {
-      alert("Clicked on " + week);
-    }
-  </script>
-</body>
+from IPython.display import display, HTML
+display(HTML("<b>✅ Paste the full code below into your <code>index.html</code> file:</b>"))
+display(HTML(f"<textarea style='width:100%; height:600px;'>{final_combined_html}</textarea>"))
