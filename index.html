@@ -213,106 +213,68 @@ html_code = """
   </div>
 
   <!-- Gantt Chart Section -->
- <!-- Gantt Chart Section -->
-<div class="gantt-container">
+ <!-- 🔄 FullCalendar Timeline Replacement for Gantt -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.css' rel='stylesheet' />
+<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.7/index.global.min.css' rel='stylesheet' />
+
+<div style="margin-top: 60px;">
   <h2>Lunes</h2>
-  <table class="gantt-table">
-    <thead>
-      <tr>
-        <th>Employee</th>
-        <th>Hr</th>
-        <th>BH</th>
-        <!-- Hours 06 to 05 -->
-        ${[...Array(24)].map((_, i) => `<th>${(6 + i) % 24}</th>`).join("")}
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Aitana Lopez</strong></td>
-        <td>4.5</td>
-        <td>32</td>
-        ${[...Array(24)].map((_, i) =>
-          i === 6
-            ? `<td colspan="3" class="shift-cell" style="position: relative;" ondragover="event.preventDefault()" ondrop="drop(event)">
-                <div class="shift-bar" draggable="true" ondragstart="drag(event)" id="shift1">3h X</div>
-              </td>`
-            : i > 6 && i < 9 ? "" : `<td></td>`
-        ).join("")}
-      </tr>
-      <tr>
-        <td><strong>Ariadna Cavajal</strong></td>
-        <td>3.0</td>
-        <td>20</td>
-        ${[...Array(24)].map((_, i) =>
-          i === 9
-            ? `<td colspan="5" class="shift-cell" style="position: relative;" ondragover="event.preventDefault()" ondrop="drop(event)">
-                <div class="shift-bar" draggable="true" ondragstart="drag(event)" id="shift2">5h X</div>
-              </td>`
-            : i > 9 && i < 14 ? "" : `<td></td>`
-        ).join("")}
-      </tr>
-      <tr>
-        <td><strong>Demand</strong></td>
-        <td colspan="26" style="text-align: center; font-size: 11px; background: #f8f8f8;">
-          ⚠️ Understaffed / ✅ OK alternating here
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div id="calendar" style="max-width: 100%; margin-top: 20px;"></div>
 </div>
 
-<style>
-  .gantt-container {
-    margin-top: 60px;
-    overflow-x: auto;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .gantt-table {
-    border-collapse: collapse;
-    min-width: 1200px;
-    width: max-content;
-  }
-
-  .gantt-table th, .gantt-table td {
-    border: 1px solid #ddd;
-    padding: 6px;
-    text-align: center;
-    font-size: 12px;
-  }
-
-  .gantt-table th {
-    background: #f0f0f0;
-    font-weight: bold;
-  }
-
-  .shift-bar {
-    background: #ffe28a;
-    height: 20px;
-    border-radius: 4px;
-    cursor: grab;
-    text-align: center;
-    font-size: 11px;
-    padding-top: 2px;
-  }
-</style>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.7/index.global.min.js'></script>
 
 <script>
-  function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
-  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
 
-  function drop(ev) {
-    ev.preventDefault();
-    const data = ev.dataTransfer.getData("text");
-    const dragged = document.getElementById(data);
-    if (dragged && ev.target.classList.contains("shift-cell")) {
-      ev.target.appendChild(dragged);
-    }
-  }
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+      initialView: 'resourceTimelineDay',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'resourceTimelineDay,resourceTimelineWeek'
+      },
+      slotMinTime: "06:00:00",
+      slotMaxTime: "30:00:00", // 06 + 24
+      resourceAreaHeaderContent: 'Colaboradores',
+      resources: [
+        { id: '1', title: 'Aitana Lopez' },
+        { id: '2', title: 'Ariadna Cavajal' },
+        { id: '3', title: 'Samuel Guzman' },
+        { id: '4', title: 'Samuel Ficticio' },
+        { id: '5', title: 'David Martinez' },
+        { id: '6', title: 'Juan Carlos' }
+      ],
+      events: [
+        {
+          id: 'a',
+          resourceId: '1',
+          start: '2025-05-13T13:00:00',
+          end: '2025-05-13T16:00:00',
+          title: '3h X',
+          color: '#ffe28a'
+        },
+        {
+          id: 'b',
+          resourceId: '2',
+          start: '2025-05-13T13:00:00',
+          end: '2025-05-13T18:00:00',
+          title: '5h X',
+          color: '#ffe28a'
+        }
+      ],
+      editable: true,
+      selectable: true,
+      nowIndicator: true,
+      height: "auto",
+      aspectRatio: 2
+    });
+
+    calendar.render();
+  });
 </script>
 
 </body>
