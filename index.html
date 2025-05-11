@@ -114,75 +114,63 @@
   </style>
 </head>
 <body>
+  <div style="overflow-x: auto;">
+    <div class="grid" style="flex-wrap: nowrap; min-width: max-content;">
+      
+      <!-- Weeks 14 to 26 -->
+      <script>
+        const weeks = [
+          { week: 14, date: "Apr 1 – Apr 7" },
+          { week: 15, date: "Apr 8 – Apr 14" },
+          { week: 16, date: "Apr 15 – Apr 21" },
+          { week: 17, date: "Apr 22 – Apr 28" },
+          { week: 18, date: "Apr 29 – May 5" },
+          { week: 19, date: "May 6 – May 12" },
+          { week: 20, date: "May 13 – May 19" },
+          { week: 21, date: "May 20 – May 26" },
+          { week: 22, date: "May 27 – Jun 2" },
+          { week: 23, date: "Jun 3 – Jun 9" },
+          { week: 24, date: "Jun 10 – Jun 16" },
+          { week: 25, date: "Jun 17 – Jun 23" },
+          { week: 26, date: "Jun 24 – Jun 30" },
+        ];
 
-  <div class="grid">
-    <!-- Repeat this card as needed -->
-    <div class="card" onclick="handleClick('Week 17')">
-      <div class="card-header">
-        <h2>Week 17</h2>
-        <p>May 6 – May 12</p>
-      </div>
-      <div class="card-body">
-        <div class="section">
-          <h3>Workforce</h3>
-          <div class="grid-3">
-            <div><p class="label">Forecasted</p><p class="value">336h</p></div>
-            <div><p class="label">Scheduled</p><p class="value">328h</p></div>
-            <div><p class="label">Delta</p><p class="value" style="color: orange;">-8h</p></div>
-          </div>
-        </div>
-        <div class="section">
-          <h3>Revenue</h3>
-          <div class="grid-3">
-            <div><p class="label">Forecast</p><p class="value">€108,750</p></div>
-            <div><p class="label">Realized</p><p class="value">€110,200</p></div>
-            <div><p class="label">Progression</p><p class="value" style="color: green;">+1.3%</p></div>
-          </div>
-        </div>
-        <div class="section">
-          <h3>Events</h3>
-          <div class="event"><div class="dot green"></div><div><div class="event-title">Golden day</div><div class="event-detail">Tuesday</div></div></div>
-          <div class="event"><div class="dot orange"></div><div><div class="event-title">Delivery</div><div class="event-detail">Wednesday</div></div></div>
-        </div>
-      </div>
+        weeks.forEach(({ week, date }) => {
+          document.write(`
+            <div class="card" onclick="handleClick('Week ${week}')">
+              <div class="card-header">
+                <h2>Week ${week}</h2>
+                <p>${date}</p>
+              </div>
+              <div class="card-body">
+                <div class="section">
+                  <h3>Workforce</h3>
+                  <div class="grid-3">
+                    <div><p class="label">Forecasted</p><p class="value">336h</p></div>
+                    <div><p class="label">Scheduled</p><p class="value">328h</p></div>
+                    <div><p class="label">Delta</p><p class="value" style="color: orange;">-8h</p></div>
+                  </div>
+                </div>
+                <div class="section">
+                  <h3>Revenue</h3>
+                  <div class="grid-3">
+                    <div><p class="label">Forecast</p><p class="value">€108,750</p></div>
+                    <div><p class="label">Realized</p><p class="value">€110,200</p></div>
+                    <div><p class="label">Progression</p><p class="value" style="color: green;">+1.3%</p></div>
+                  </div>
+                </div>
+                <div class="section">
+                  <h3>Events</h3>
+                  <div class="event"><div class="dot green"></div><div><div class="event-title">Golden day</div><div class="event-detail">Tuesday</div></div></div>
+                  <div class="event"><div class="dot orange"></div><div><div class="event-title">Delivery</div><div class="event-detail">Wednesday</div></div></div>
+                </div>
+              </div>
+            </div>
+          `);
+        });
+      </script>
+
     </div>
-
-    <!-- Duplicate below for more weeks -->
-    <div class="card" onclick="handleClick('Week 18')">
-      <div class="card-header">
-        <h2>Week 18</h2>
-        <p>May 13 – May 19</p>
-      </div>
-      <div class="card-body">
-        <div class="section">
-          <h3>Workforce</h3>
-          <div class="grid-3">
-            <div><p class="label">Forecasted</p><p class="value">340h</p></div>
-            <div><p class="label">Scheduled</p><p class="value">335h</p></div>
-            <div><p class="label">Delta</p><p class="value" style="color: orange;">-5h</p></div>
-          </div>
-        </div>
-        <div class="section">
-          <h3>Revenue</h3>
-          <div class="grid-3">
-            <div><p class="label">Forecast</p><p class="value">€109,000</p></div>
-            <div><p class="label">Realized</p><p class="value">€108,400</p></div>
-            <div><p class="label">Progression</p><p class="value" style="color: red;">-0.5%</p></div>
-          </div>
-        </div>
-        <div class="section">
-          <h3>Events</h3>
-          <div class="event"><div class="dot green"></div><div><div class="event-title">Golden day</div><div class="event-detail">Tuesday, May 7</div></div></div>
-        <div class="event"><div class="dot orange"></div><div><div class="event-title">Truck delivery</div><div class="event-detail">Wednesday, May 8, 8:00 AM</div></div></div>
-        <div class="event"><div class="dot orange"></div><div><div class="event-title">Layout change Quechua</div><div class="event-detail">Friday, May 10, 6:00 - 12:00</div></div></div>
-        <div class="event"><div class="dot green"></div><div><div class="event-title">Snowstorm</div><div class="event-detail">Monday, May 6</div></div></div>
-        <div class="event"><div class="dot orange"></div><div><div class="event-title">Staff training</div><div class="event-detail">Thursday, May 9</div></div></div>
-        <div class="event"><div class="dot orange"></div><div><div class="event-title">Inventory check</div><div class="event-detail">Saturday, May 11</div></div></div>
-        <div class="event"><div class="dot green"></div><div><div class="event-title">Promotion launch</div><div class="event-detail">Tuesday, May 7</div></div></div>        </div>
-      </div>
-    </div>
-
-    <!-- Add more .card blocks as needed -->
   </div>
 
   <script>
@@ -190,6 +178,4 @@
       alert("Clicked on " + week);
     }
   </script>
-
 </body>
-</html>
