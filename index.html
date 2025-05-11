@@ -175,53 +175,68 @@
   <!-- 🔽 INSERT THE GANTT COMPONENT HERE 🔽 -->
 <h2 style="margin-top: 60px; margin-left: 20px;">Lunes</h2>
 <div style="overflow-x: auto; padding: 0 20px;">
-  <table style="border-collapse: collapse; font-family: Arial, sans-serif; min-width: 1000px;">
+  <table style="border-collapse: collapse; font-family: Arial, sans-serif; min-width: 1000px; width: max-content;">
     <thead>
       <tr>
         <th style="background: #f0f0f0; padding: 4px 8px; text-align: left;">Colaboradores</th>
         <th style="background: #f0f0f0;">Hr.</th>
         <th style="background: #f0f0f0;">BH</th>
-        <!-- Hour headers -->
-        ${[...Array(24)].map((_, i) => `
-          <th style="font-size: 11px; background: #f0f0f0; padding: 2px;">${(i + 6) % 24}:00</th>
-        `).join('')}
+        <!-- 06:00 to 05:00 -->
+        <th style="background: #f0f0f0;">06</th>
+        <th style="background: #f0f0f0;">07</th>
+        <th style="background: #f0f0f0;">08</th>
+        <th style="background: #f0f0f0;">09</th>
+        <th style="background: #f0f0f0;">10</th>
+        <th style="background: #f0f0f0;">11</th>
+        <th style="background: #f0f0f0;">12</th>
+        <th style="background: #f0f0f0;">13</th>
+        <th style="background: #f0f0f0;">14</th>
+        <th style="background: #f0f0f0;">15</th>
+        <th style="background: #f0f0f0;">16</th>
+        <th style="background: #f0f0f0;">17</th>
+        <th style="background: #f0f0f0;">18</th>
+        <th style="background: #f0f0f0;">19</th>
+        <th style="background: #f0f0f0;">20</th>
+        <th style="background: #f0f0f0;">21</th>
+        <th style="background: #f0f0f0;">22</th>
+        <th style="background: #f0f0f0;">23</th>
+        <th style="background: #f0f0f0;">00</th>
+        <th style="background: #f0f0f0;">01</th>
+        <th style="background: #f0f0f0;">02</th>
+        <th style="background: #f0f0f0;">03</th>
+        <th style="background: #f0f0f0;">04</th>
+        <th style="background: #f0f0f0;">05</th>
       </tr>
     </thead>
     <tbody>
-      ${[
-        "David Martinez", "Juan Carlos", "Aitana Lopez", "Ariadna Cavajal", "Samuel Guzman", "Samuel Ficticio"
-      ].map((name, rowIndex) => `
-        <tr>
-          <td style="font-weight: bold; padding: 4px 8px;">${name}</td>
-          <td style="text-align: center;">${Math.floor(Math.random() * 6)}</td>
-          <td style="text-align: center;">${Math.floor(20 + Math.random() * 20)}</td>
-          ${[...Array(24)].map((_, hour) => {
-            if ((rowIndex === 2 && hour === 7) || (rowIndex === 3 && hour === 9)) {
-              return `<td colspan="3" style="background: #ffec99; border: 1px solid #e6e6e6; text-align: center; font-size: 11px;">${hour === 7 ? '3h X' : '5h X'}</td>`;
-            }
-            return `<td style="border: 1px solid #f0f0f0;"></td>`;
-          }).join('').slice(0, 24 * 58)} <!-- slice to limit overflow -->
-        </tr>
-      `).join('')}
-      <!-- Total row -->
+      <!-- Employee Row 1 -->
       <tr>
-        <td style="font-weight: bold; background: #f9f9f9;">Total:</td>
-        <td colspan="2"></td>
-        ${[...Array(24)].map(() => `
-          <td style="text-align: center; font-size: 11px; background: #f2f2f2;">${Math.floor(Math.random() * 5)}</td>
-        `).join('')}
+        <td style="font-weight: bold;">Aitana Lopez</td>
+        <td style="text-align: center;">4.5</td>
+        <td style="text-align: center;">32</td>
+        <td colspan="7"></td>
+        <td colspan="3" style="background: #ffe28a; text-align: center; font-size: 11px;">3h X</td>
+        <td colspan="16"></td>
       </tr>
-      <!-- Staff planning row -->
+      <!-- Employee Row 2 -->
       <tr>
-        <td style="font-weight: bold; background: #f9f9f9;">Staff Planning</td>
+        <td style="font-weight: bold;">Ariadna Cavajal</td>
+        <td style="text-align: center;">3.0</td>
+        <td style="text-align: center;">20</td>
+        <td colspan="9"></td>
+        <td colspan="5" style="background: #ffe28a; text-align: center; font-size: 11px;">5h X</td>
+        <td colspan="12"></td>
+      </tr>
+      <!-- Demand Row -->
+      <tr>
+        <td style="font-weight: bold;">Demand</td>
         <td colspan="2"></td>
-        ${[...Array(24)].map(() => `
-          <td style="text-align: center; font-size: 11px; background: #e6f7ff;">${Math.floor(Math.random() * 5)}</td>
-        `).join('')}
+        <td colspan="24" style="font-size: 11px; background: #f5f5f5; text-align: center;">⚠️ Understaffed / ✅ OK alternating here</td>
       </tr>
     </tbody>
   </table>
 </div>
+
 <!-- 🔽 Ending THE GANTT COMPONENT HERE 🔽 -->
 
 </script>
