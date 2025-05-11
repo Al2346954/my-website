@@ -1,11 +1,12 @@
-# Combine the weekly card grid and the weekly console (Gantt-style) into one valid HTML document
+# Rebuild full HTML without toggle, making Weekly Console fully visible and prepared for interactivity
 
-final_combined_html = """
+full_static_console_html = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Weekly Summary Dashboard + Weekly Console</title>
+  <title>Weekly Summary + Console</title>
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,7 +15,7 @@ final_combined_html = """
       margin: 0;
     }
 
-    /* Weekly Cards Grid */
+    /* Weekly Cards */
     .grid {
       display: flex;
       flex-wrap: nowrap;
@@ -44,17 +45,6 @@ final_combined_html = """
       border-bottom: 1px solid #eee;
     }
 
-    .card-header h2 {
-      font-size: 16px;
-      margin: 0;
-    }
-
-    .card-header p {
-      margin: 0;
-      font-size: 11px;
-      color: #777;
-    }
-
     .card-body {
       padding: 12px 16px;
       max-height: 240px;
@@ -65,19 +55,9 @@ final_combined_html = """
       margin-bottom: 16px;
     }
 
-    .section h3 {
-      margin-bottom: 6px;
-      font-size: 13px;
-      color: #444;
-    }
-
     .grid-3 {
       display: flex;
       gap: 10px;
-    }
-
-    .grid-3 > div {
-      flex: 1;
     }
 
     .label {
@@ -90,155 +70,60 @@ final_combined_html = """
       font-size: 13px;
     }
 
-    .event {
-      display: flex;
-      gap: 8px;
-      border-bottom: 1px solid #eee;
-      padding: 6px 0;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-top: 5px;
-      flex-shrink: 0;
-    }
-
-    .green { background: #28a745; }
-    .orange { background: #fd7e14; }
-
-    .event-title {
-      font-weight: bold;
-      font-size: 13px;
-    }
-
-    .event-detail {
-      font-size: 11px;
-      color: #666;
-    }
-
-    /* Weekly Console Styling */
-    .console-container {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-    }
-
-    .console-header {
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .console-title {
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-      display: flex;
-      align-items: center;
-    }
-
-    .console-title span {
-      margin-right: 8px;
-      color: #2563eb;
-    }
-
-    .console-content {
-      padding: 16px;
-      border-top: 1px solid #eee;
-      display: none;
-    }
-
-    .scroll-area {
+    /* Gantt Timeline */
+    .gantt {
+      margin-top: 60px;
       overflow-x: auto;
-      display: flex;
-      gap: 16px;
-      padding-bottom: 8px;
     }
 
-    .console-card {
-      min-width: 320px;
-      max-width: 380px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      background: white;
-      cursor: pointer;
-      transition: box-shadow 0.2s;
+    table {
+      border-collapse: collapse;
+      min-width: 1000px;
+      width: 100%;
     }
 
-    .console-card:hover {
-      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    th, td {
+      border: 1px solid #e0e0e0;
+      padding: 4px;
+      font-size: 12px;
     }
 
-    .console-card-header {
-      background: #f8f8f8;
-      border-bottom: 1px solid #eee;
-      padding: 12px;
-      display: flex;
-      justify-content: space-between;
+    th {
+      background: #f0f0f0;
+      font-weight: bold;
+      text-align: center;
     }
 
-    .console-card-body {
-      max-height: 300px;
-      overflow-y: auto;
-      padding: 16px;
+    td:first-child, th:first-child {
+      text-align: left;
+      padding-left: 8px;
     }
 
-    .card-section {
-      margin-bottom: 16px;
-    }
-
-    .card-section h4 {
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 8px;
-    }
-
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .delta-up {
-      color: green;
-    }
-
-    .delta-down {
-      color: #e67e22;
-    }
-
-    .event-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 4px;
-    }
-
-    .green-dot {
-      background: #28a745;
+    .shift-block {
+      background: #ffe28a;
+      border: 1px solid #ccc;
+      font-size: 12px;
+      padding: 4px 0;
+      text-align: center;
+      cursor: move;
+      position: relative;
+      white-space: nowrap;
     }
   </style>
 </head>
 <body>
 
-  <!-- Weekly Cards Grid -->
+  <!-- Weekly Cards -->
   <div class="grid">
     <script>
-      const weeks = Array.from({ length: 13 }, (_, i) => ({
-        week: 14 + i,
-        date: `Week ${14 + i} date range`
+      const weeks = Array.from({ length: 6 }, (_, i) => ({
+        week: 20 + i,
+        date: `Week ${20 + i} dates`
       }));
 
       weeks.forEach(({ week, date }) => {
         document.write(`
-          <div class="card" onclick="handleClick('Week ${week}')">
+          <div class="card">
             <div class="card-header">
               <h2>Week ${week}</h2>
               <p>${date}</p>
@@ -260,11 +145,6 @@ final_combined_html = """
                   <div><p class="label">Progression</p><p class="value" style="color: green;">+1.3%</p></div>
                 </div>
               </div>
-              <div class="section">
-                <h3>Events</h3>
-                <div class="event"><div class="dot green"></div><div><div class="event-title">Golden day</div><div class="event-detail">Tuesday</div></div></div>
-                <div class="event"><div class="dot orange"></div><div><div class="event-title">Delivery</div><div class="event-detail">Wednesday</div></div></div>
-              </div>
             </div>
           </div>
         `);
@@ -272,77 +152,88 @@ final_combined_html = """
     </script>
   </div>
 
-  <!-- Weekly Console Section -->
-  <div class="console-container">
-    <div class="console-header" onclick="toggleWeeklyConsole()">
-      <div class="console-title">
-        <span>📅</span> Weekly Console – Short-Term Review
-      </div>
-      <button id="toggleButton">▼</button>
-    </div>
-    <div class="console-content" id="weeklyConsole">
-      <div class="scroll-area">
-        <div class="console-card">
-          <div class="console-card-header">
-            <strong>Week 31</strong>
-            <span>Apr 3 – Apr 9</span>
-          </div>
-          <div class="console-card-body">
-            <div class="card-section">
-              <h4>Workforce</h4>
-              <div class="card-grid">
-                <div><div class="label">Forecasted</div><div class="value">220h</div></div>
-                <div><div class="label">Scheduled</div><div class="value">250h</div></div>
-                <div><div class="label">Delta</div><div class="value delta-up">+30h</div></div>
-              </div>
-            </div>
-            <div class="card-section">
-              <h4>Revenue</h4>
-              <div class="card-grid">
-                <div><div class="label">Forecast</div><div class="value">$102,450</div></div>
-                <div><div class="label">Realized</div><div class="value">$98,750</div></div>
-                <div><div class="label">Progression</div><div class="value delta-down">-3.6%</div></div>
-              </div>
-            </div>
-            <div class="card-section">
-              <h4>Affinity Rate</h4>
-              <div><div class="label">Alignment</div><div class="value">85%</div></div>
-            </div>
-            <div class="card-section">
-              <h4>Events</h4>
-              <div><span class="event-dot green-dot"></span> Local Marathon</div>
-              <div><span class="event-dot green-dot"></span> Truck Delivery</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- Gantt Timeline -->
+  <div class="gantt">
+    <table>
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Hours</th>
+          ${[...Array(18)].map((_, i) => `<th>${6 + i}</th>`).join("")}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Aitana</td>
+          <td>5.0</td>
+          ${[...Array(6)].map(() => "<td></td>").join("")}
+          <td colspan="3" style="position: relative;">
+            <div class="shift-block" style="width: 240px;" data-x="0">3h Shift</div>
+          </td>
+          ${[...Array(9)].map(() => "<td></td>").join("")}
+        </tr>
+        <tr>
+          <td>Carlos</td>
+          <td>4.0</td>
+          ${[...Array(8)].map(() => "<td></td>").join("")}
+          <td colspan="4" style="position: relative;">
+            <div class="shift-block" style="width: 320px;" data-x="0">4h Shift</div>
+          </td>
+          ${[...Array(6)].map(() => "<td></td>").join("")}
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <script>
-    function handleClick(week) {
-      alert("Clicked on " + week);
-    }
-
-    function toggleWeeklyConsole() {
-      const content = document.getElementById("weeklyConsole");
-      const button = document.getElementById("toggleButton");
-      if (content.style.display === "block") {
-        content.style.display = "none";
-        button.innerText = "▼";
-      } else {
-        content.style.display = "block";
-        button.innerText = "▲";
-      }
-    }
-
-    // Show Weekly Console by default
-    document.getElementById("weeklyConsole").style.display = "block";
+    interact('.shift-block')
+      .draggable({
+        inertia: true,
+        modifiers: [
+          interact.modifiers.snap({
+            targets: [interact.snappers.grid({ x: 80, y: 1 })],
+            range: Infinity,
+            relativePoints: [{ x: 0, y: 0 }]
+          }),
+          interact.modifiers.restrictRect({
+            restriction: 'parent',
+            endOnly: true
+          })
+        ],
+        listeners: {
+          move(event) {
+            const target = event.target;
+            const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+            target.style.transform = `translateX(${x}px)`;
+            target.setAttribute('data-x', x);
+          }
+        }
+      })
+      .resizable({
+        edges: { left: true, right: true },
+        modifiers: [
+          interact.modifiers.snapSize({
+            targets: [interact.snappers.grid({ width: 80, height: 1 })]
+          })
+        ],
+        listeners: {
+          move(event) {
+            const target = event.target;
+            let { x } = target.dataset;
+            x = parseFloat(x) || 0;
+            target.style.width = event.rect.width + 'px';
+            const newX = x + event.deltaRect.left;
+            target.style.transform = `translateX(${newX}px)`;
+            target.setAttribute('data-x', newX);
+          }
+        }
+      });
   </script>
+
 </body>
 </html>
 """
 
 from IPython.display import display, HTML
-display(HTML("<b>✅ Paste the full code below into your <code>index.html</code> file:</b>"))
-display(HTML(f"<textarea style='width:100%; height:600px;'>{final_combined_html}</textarea>"))
+display(HTML("<b>✅ Paste the full code below into your <code>index.html</code> file. It includes scrollable weekly cards and a fully interactive static Weekly Console.</b>"))
+display(HTML(f"<textarea style='width:100%; height:600px;'>{full_static_console_html}</textarea>"))
