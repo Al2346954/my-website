@@ -177,156 +177,222 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Interactive Gantt Timeline – Lunes</title>
-  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <title>Weekly Console</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      padding: 40px;
+      background: #f9f9f9;
       margin: 0;
+      padding: 20px;
     }
 
-    table {
-      border-collapse: collapse;
-      min-width: 1000px;
+    .section {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
     }
 
-    th, td {
-      border: 1px solid #e0e0e0;
-      padding: 4px;
-      font-size: 12px;
+    .section-header {
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
     }
 
-    th {
-      background: #f0f0f0;
+    .section-title {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
       font-weight: bold;
-      text-align: center;
+      color: #333;
     }
 
-    td:first-child, th:first-child {
-      text-align: left;
-      padding-left: 8px;
+    .section-title span {
+      margin-right: 8px;
+      color: #2563eb;
     }
 
-    .shift-block {
-      background: #ffe28a;
-      border: 1px solid #ccc;
-      font-size: 12px;
+    .section-content {
+      padding: 16px;
+      border-top: 1px solid #eee;
+      display: none;
+    }
+
+    .scroll-area {
+      overflow-x: auto;
+      display: flex;
+      gap: 16px;
+      padding-bottom: 8px;
+    }
+
+    .card {
+      min-width: 320px;
+      max-width: 380px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      background: white;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    }
+
+    .card-header {
+      background: #f8f8f8;
+      border-bottom: 1px solid #eee;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .card-body {
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .card-section {
+      margin-bottom: 16px;
+    }
+
+    .card-section h4 {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .label {
+      font-size: 11px;
+      color: #888;
+    }
+
+    .value {
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .delta-up {
+      color: green;
+    }
+
+    .delta-down {
+      color: #e67e22;
+    }
+
+    .event {
+      border-bottom: 1px solid #eee;
       padding: 4px 0;
-      text-align: center;
-      cursor: move;
-      position: relative;
-      white-space: nowrap;
+    }
+
+    .event-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    .green-dot {
+      background: #28a745;
+    }
+
+    .tooltip {
+      font-size: 11px;
+      color: #666;
     }
   </style>
 </head>
 <body>
 
-<h2 style="margin-bottom: 16px;">Lunes</h2>
-<div style="overflow-x: auto;">
-  <table>
-    <thead>
-      <tr>
-        <th>Colaboradores</th>
-        <th>Hr.</th>
-        <th>BH</th>
-        <!-- Hours 06–05 -->
-        ${[...Array(24)].map((_, i) => `<th>${(i + 6) % 24}</th>`).join('')}
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Employee: Aitana Lopez -->
-      <tr>
-        <td>Aitana Lopez</td>
-        <td>4.5</td>
-        <td>32</td>
-        <!-- 13 empty slots -->
-        ${[...Array(7)].map(() => `<td></td>`).join('')}
-        <!-- Shift block: 3h X -->
-        <td colspan="3" style="position: relative;">
-          <div class="shift-block" style="width: 240px;" data-x="0">3h X</div>
-        </td>
-        ${[...Array(14)].map(() => `<td></td>`).join('')}
-      </tr>
+  <div class="section">
+    <div class="section-header" onclick="toggleWeeklyConsole()">
+      <div class="section-title">
+        <span>📅</span> Weekly Console – Short-Term Review
+      </div>
+      <button id="toggleButton">▼</button>
+    </div>
+    <div class="section-content" id="weeklyConsole">
+      <div class="scroll-area">
+        
+        <!-- Week Card -->
+        <div class="card">
+          <div class="card-header">
+            <strong>Week 31</strong>
+            <span>Apr 3 – Apr 9</span>
+          </div>
+          <div class="card-body">
+            <div class="card-section">
+              <h4>Workforce</h4>
+              <div class="card-grid">
+                <div><div class="label">Forecasted</div><div class="value">220h</div></div>
+                <div><div class="label">Scheduled</div><div class="value">250h</div></div>
+                <div><div class="label">Delta</div><div class="value delta-up">+30h</div></div>
+              </div>
+            </div>
 
-      <!-- Employee: Ariadna Cavajal -->
-      <tr>
-        <td>Ariadna Cavajal</td>
-        <td>3.0</td>
-        <td>20</td>
-        ${[...Array(9)].map(() => `<td></td>`).join('')}
-        <!-- Shift block: 5h X -->
-        <td colspan="5" style="position: relative;">
-          <div class="shift-block" style="width: 400px;" data-x="0">5h X</div>
-        </td>
-        ${[...Array(10)].map(() => `<td></td>`).join('')}
-      </tr>
+            <div class="card-section">
+              <h4>Revenue</h4>
+              <div class="card-grid">
+                <div><div class="label">Forecast</div><div class="value">$102,450</div></div>
+                <div><div class="label">Realized</div><div class="value">$98,750</div></div>
+                <div><div class="label">Progression</div><div class="value delta-down">-3.6%</div></div>
+              </div>
+            </div>
 
-      <!-- Demand row -->
-      <tr>
-        <td>Demand</td>
-        <td colspan="2"></td>
-        ${[...Array(24)].map((_, i) =>
-          `<td style="text-align: center; font-size: 11px;">${i % 4 === 0 ? '⚠️' : '✅'}</td>`
-        ).join('')}
-      </tr>
-    </tbody>
-  </table>
-</div>
+            <div class="card-section">
+              <h4>Affinity Rate</h4>
+              <div class="card-grid">
+                <div class="tooltip" title="How well your scheduled hours match traffic patterns.">
+                  <div class="label">Affinity Rate</div>
+                  <div class="value">85%</div>
+                </div>
+              </div>
+            </div>
 
-<script>
-  interact('.shift-block')
-    .draggable({
-      inertia: true,
-      modifiers: [
-        interact.modifiers.snap({
-          targets: [interact.snappers.grid({ x: 80, y: 1 })],
-          range: Infinity,
-          relativePoints: [{ x: 0, y: 0 }]
-        }),
-        interact.modifiers.restrictRect({
-          restriction: 'parent',
-          endOnly: true
-        })
-      ],
-      listeners: {
-        move(event) {
-          const target = event.target;
-          const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-          target.style.transform = `translateX(${x}px)`;
-          target.setAttribute('data-x', x);
-        }
+            <div class="card-section">
+              <h4>Events</h4>
+              <div class="event"><span class="event-dot green-dot"></span> Local Marathon</div>
+              <div class="event"><span class="event-dot green-dot"></span> Truck Delivery</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Duplicate this block for more weeks as needed -->
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleWeeklyConsole() {
+      const content = document.getElementById("weeklyConsole");
+      const button = document.getElementById("toggleButton");
+      if (content.style.display === "block") {
+        content.style.display = "none";
+        button.innerText = "▼";
+      } else {
+        content.style.display = "block";
+        button.innerText = "▲";
       }
-    })
-    .resizable({
-      edges: { left: true, right: true },
-      modifiers: [
-        interact.modifiers.snapSize({
-          targets: [interact.snappers.grid({ width: 80, height: 1 })]
-        })
-      ],
-      listeners: {
-        move(event) {
-          const target = event.target;
-          let { x } = target.dataset;
-          x = parseFloat(x) || 0;
+    }
 
-          // Update the element's style
-          target.style.width = event.rect.width + 'px';
-
-          // Optionally keep it draggable while resizing
-          const newX = x + event.deltaRect.left;
-          target.style.transform = `translateX(${newX}px)`;
-          target.setAttribute('data-x', newX);
-        }
-      }
-    });
-</script>
-
+    // By default, make it visible
+    document.getElementById("weeklyConsole").style.display = "block";
+  </script>
 </body>
 </html>
-
 
 <!-- 🔽 Ending THE GANTT COMPONENT HERE 🔽 -->
 
