@@ -1,12 +1,8 @@
-# Rebuild full HTML without toggle, making Weekly Console fully visible and prepared for interactivity
-
-full_static_console_html = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Weekly Summary + Console</title>
-  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <title>Weekly Summary Dashboard</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -15,13 +11,12 @@ full_static_console_html = """
       margin: 0;
     }
 
-    /* Weekly Cards */
     .grid {
       display: flex;
       flex-wrap: nowrap;
       gap: 20px;
+      justify-content: flex-start;
       overflow-x: auto;
-      padding-bottom: 40px;
     }
 
     .card {
@@ -45,6 +40,17 @@ full_static_console_html = """
       border-bottom: 1px solid #eee;
     }
 
+    .card-header h2 {
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .card-header p {
+      margin: 0;
+      font-size: 11px;
+      color: #777;
+    }
+
     .card-body {
       padding: 12px 16px;
       max-height: 240px;
@@ -55,9 +61,19 @@ full_static_console_html = """
       margin-bottom: 16px;
     }
 
+    .section h3 {
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: #444;
+    }
+
     .grid-3 {
       display: flex;
       gap: 10px;
+    }
+
+    .grid-3 > div {
+      flex: 1;
     }
 
     .label {
@@ -70,60 +86,95 @@ full_static_console_html = """
       font-size: 13px;
     }
 
-    /* Gantt Timeline */
-    .gantt {
+    .event {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid #eee;
+      padding: 6px 0;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .green { background: #28a745; }
+    .orange { background: #fd7e14; }
+
+    .event-title {
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .event-detail {
+      font-size: 11px;
+      color: #666;
+    }
+
+    /* Gantt */
+    .gantt-container {
       margin-top: 60px;
       overflow-x: auto;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
-    table {
+    .gantt-table {
       border-collapse: collapse;
-      min-width: 1000px;
-      width: 100%;
+      min-width: 1200px;
+      width: max-content;
     }
 
-    th, td {
-      border: 1px solid #e0e0e0;
-      padding: 4px;
+    .gantt-table th, .gantt-table td {
+      border: 1px solid #ddd;
+      padding: 6px;
+      text-align: center;
       font-size: 12px;
     }
 
-    th {
+    .gantt-table th {
       background: #f0f0f0;
       font-weight: bold;
-      text-align: center;
     }
 
-    td:first-child, th:first-child {
-      text-align: left;
-      padding-left: 8px;
-    }
-
-    .shift-block {
+    .shift-bar {
       background: #ffe28a;
-      border: 1px solid #ccc;
-      font-size: 12px;
-      padding: 4px 0;
+      height: 20px;
+      border-radius: 4px;
+      cursor: grab;
       text-align: center;
-      cursor: move;
-      position: relative;
-      white-space: nowrap;
+      font-size: 11px;
+      padding-top: 2px;
     }
   </style>
 </head>
 <body>
-
-  <!-- Weekly Cards -->
   <div class="grid">
     <script>
-      const weeks = Array.from({ length: 6 }, (_, i) => ({
-        week: 20 + i,
-        date: `Week ${20 + i} dates`
-      }));
+      const weeks = [
+        { week: 14, date: "Apr 1 – Apr 7" },
+        { week: 15, date: "Apr 8 – Apr 14" },
+        { week: 16, date: "Apr 15 – Apr 21" },
+        { week: 17, date: "Apr 22 – Apr 28" },
+        { week: 18, date: "Apr 29 – May 5" },
+        { week: 19, date: "May 6 – May 12" },
+        { week: 20, date: "May 13 – May 19" },
+        { week: 21, date: "May 20 – May 26" },
+        { week: 22, date: "May 27 – Jun 2" },
+        { week: 23, date: "Jun 3 – Jun 9" },
+        { week: 24, date: "Jun 10 – Jun 16" },
+        { week: 25, date: "Jun 17 – Jun 23" },
+        { week: 26, date: "Jun 24 – Jun 30" }
+      ];
 
       weeks.forEach(({ week, date }) => {
         document.write(`
-          <div class="card">
+          <div class="card" onclick="handleClick('Week ${week}')">
             <div class="card-header">
               <h2>Week ${week}</h2>
               <p>${date}</p>
@@ -145,6 +196,11 @@ full_static_console_html = """
                   <div><p class="label">Progression</p><p class="value" style="color: green;">+1.3%</p></div>
                 </div>
               </div>
+              <div class="section">
+                <h3>Events</h3>
+                <div class="event"><div class="dot green"></div><div><div class="event-title">Golden day</div><div class="event-detail">Tuesday</div></div></div>
+                <div class="event"><div class="dot orange"></div><div><div class="event-title">Delivery</div><div class="event-detail">Wednesday</div></div></div>
+              </div>
             </div>
           </div>
         `);
@@ -152,88 +208,68 @@ full_static_console_html = """
     </script>
   </div>
 
-  <!-- Gantt Timeline -->
-  <div class="gantt">
-    <table>
+  <!-- Gantt Chart Section -->
+  <div class="gantt-container">
+    <h2>Lunes</h2>
+    <table class="gantt-table">
       <thead>
         <tr>
           <th>Employee</th>
-          <th>Hours</th>
-          ${[...Array(18)].map((_, i) => `<th>${6 + i}</th>`).join("")}
+          <th>Hr</th>
+          <th>BH</th>
+          ${[...Array(24)].map((_, i) => `<th>${(6 + i) % 24}</th>`).join("")}
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Aitana</td>
-          <td>5.0</td>
-          ${[...Array(6)].map(() => "<td></td>").join("")}
-          <td colspan="3" style="position: relative;">
-            <div class="shift-block" style="width: 240px;" data-x="0">3h Shift</div>
-          </td>
-          ${[...Array(9)].map(() => "<td></td>").join("")}
+          <td><strong>Aitana Lopez</strong></td>
+          <td>4.5</td>
+          <td>32</td>
+          ${[...Array(24)].map((_, i) =>
+            i === 6
+              ? `<td colspan="3" class="shift-cell" style="position: relative;" ondragover="event.preventDefault()" ondrop="drop(event)">
+                  <div class="shift-bar" draggable="true" ondragstart="drag(event)" id="shift1">3h X</div>
+                </td>`
+              : i > 6 && i < 9 ? "" : `<td></td>`
+          ).join("")}
         </tr>
         <tr>
-          <td>Carlos</td>
-          <td>4.0</td>
-          ${[...Array(8)].map(() => "<td></td>").join("")}
-          <td colspan="4" style="position: relative;">
-            <div class="shift-block" style="width: 320px;" data-x="0">4h Shift</div>
+          <td><strong>Ariadna Cavajal</strong></td>
+          <td>3.0</td>
+          <td>20</td>
+          ${[...Array(24)].map((_, i) =>
+            i === 9
+              ? `<td colspan="5" class="shift-cell" style="position: relative;" ondragover="event.preventDefault()" ondrop="drop(event)">
+                  <div class="shift-bar" draggable="true" ondragstart="drag(event)" id="shift2">5h X</div>
+                </td>`
+              : i > 9 && i < 14 ? "" : `<td></td>`
+          ).join("")}
+        </tr>
+        <tr>
+          <td><strong>Demand</strong></td>
+          <td colspan="26" style="text-align: center; font-size: 11px; background: #f8f8f8;">
+            ⚠️ Understaffed / ✅ OK alternating here
           </td>
-          ${[...Array(6)].map(() => "<td></td>").join("")}
         </tr>
       </tbody>
     </table>
   </div>
 
   <script>
-    interact('.shift-block')
-      .draggable({
-        inertia: true,
-        modifiers: [
-          interact.modifiers.snap({
-            targets: [interact.snappers.grid({ x: 80, y: 1 })],
-            range: Infinity,
-            relativePoints: [{ x: 0, y: 0 }]
-          }),
-          interact.modifiers.restrictRect({
-            restriction: 'parent',
-            endOnly: true
-          })
-        ],
-        listeners: {
-          move(event) {
-            const target = event.target;
-            const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-            target.style.transform = `translateX(${x}px)`;
-            target.setAttribute('data-x', x);
-          }
-        }
-      })
-      .resizable({
-        edges: { left: true, right: true },
-        modifiers: [
-          interact.modifiers.snapSize({
-            targets: [interact.snappers.grid({ width: 80, height: 1 })]
-          })
-        ],
-        listeners: {
-          move(event) {
-            const target = event.target;
-            let { x } = target.dataset;
-            x = parseFloat(x) || 0;
-            target.style.width = event.rect.width + 'px';
-            const newX = x + event.deltaRect.left;
-            target.style.transform = `translateX(${newX}px)`;
-            target.setAttribute('data-x', newX);
-          }
-        }
-      });
-  </script>
+    function handleClick(week) {
+      alert("Clicked on " + week);
+    }
 
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData("text");
+      const dragged = document.getElementById(data);
+      ev.target.appendChild(dragged);
+    }
+  </script>
 </body>
 </html>
-"""
-
-from IPython.display import display, HTML
-display(HTML("<b>✅ Paste the full code below into your <code>index.html</code> file. It includes scrollable weekly cards and a fully interactive static Weekly Console.</b>"))
-display(HTML(f"<textarea style='width:100%; height:600px;'>{full_static_console_html}</textarea>"))
