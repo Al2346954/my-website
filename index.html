@@ -172,7 +172,42 @@
 
     </div>
   </div>
+<h2 style="margin: 60px 0 16px 20px;">Daily Gantt Timeline</h2>
+<div style="overflow-x: auto; padding: 0 20px;">
+  <div style="display: grid; grid-template-columns: 150px repeat(18, 80px); border: 1px solid #ddd; min-width: max-content;">
 
+    <!-- Time Header Row -->
+    <div style="background: #f0f0f0; font-weight: bold;">Employee</div>
+    <div style="grid-column: span 18; display: contents;">
+      <!-- Hours 6 AM – 12 AM -->
+      ${[...Array(18)].map((_, i) => `<div style="text-align:center; font-size:12px; padding: 6px; background:#f0f0f0;">${6+i}:00</div>`).join("")}
+    </div>
+
+    <!-- Repeatable Employee Rows -->
+    ${[...Array(8)].map((_, row) => `
+      <div style="font-weight: bold; background: #fff; padding: 8px;">Employee ${row + 1}</div>
+      ${[...Array(18)].map((_, i) => {
+        // Add some demo shifts
+        if (i === 2 && row === 0) return `<div style="background: yellow; height: 100%; border: 1px solid #ccc;"></div>`
+        if (i === 6 && row === 2) return `<div style="background: green; height: 100%; border: 1px solid #ccc;"></div>`
+        if (i === 10 && row === 4) return `<div style="background: blue; height: 100%; border: 1px solid #ccc;"></div>`
+        return `<div style="border: 1px solid #eee;"></div>`
+      }).join("")}
+    `).join("")}
+
+    <!-- Demand Row -->
+    <div style="font-weight: bold; background: #fafafa; padding: 6px;">Demand</div>
+    ${[...Array(18)].map((_, i) => `
+      <div style="text-align:center; font-size:11px; background: ${i % 4 === 0 ? '#ffe0e0' : '#e0ffe0'};">
+        ${i % 4 === 0 ? '⚠️ Under' : '✅ OK'}
+      </div>
+    `).join("")}
+
+  </div>
+</div>
+
+</script>
+</body>
   <script>
     function handleClick(week) {
       alert("Clicked on " + week);
