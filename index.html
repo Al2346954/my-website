@@ -213,72 +213,108 @@ html_code = """
   </div>
 
   <!-- Gantt Chart Section -->
-  <div class="gantt-container">
-    <h2>Lunes</h2>
-    <table class="gantt-table">
-      <thead>
-        <tr>
-          <th>Employee</th>
-          <th>Hr</th>
-          <th>BH</th>
-          <script>
-            for (let i = 6; i < 30; i++) {
-              document.write(`<th>${i % 24}</th>`);
-            }
-          </script>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Aitana Lopez</strong></td>
-          <td>4.5</td>
-          <td>32</td>
-          ${[...Array(24)].map((_, i) =>
-            i === 6
-              ? `<td colspan="3" class="shift-cell" style="position: relative;" ondragover="event.preventDefault()" ondrop="drop(event)">
-                  <div class="shift-bar" draggable="true" ondragstart="drag(event)" id="shift1">3h X</div>
-                </td>`
-              : i > 6 && i < 9 ? "" : `<td></td>`
-          ).join("")}
-        </tr>
-        <tr>
-          <td><strong>Ariadna Cavajal</strong></td>
-          <td>3.0</td>
-          <td>20</td>
-          ${[...Array(24)].map((_, i) =>
-            i === 9
-              ? `<td colspan="5" class="shift-cell" style="position: relative;" ondragover="event.preventDefault()" ondrop="drop(event)">
-                  <div class="shift-bar" draggable="true" ondragstart="drag(event)" id="shift2">5h X</div>
-                </td>`
-              : i > 9 && i < 14 ? "" : `<td></td>`
-          ).join("")}
-        </tr>
-        <tr>
-          <td><strong>Demand</strong></td>
-          <td colspan="26" style="text-align: center; font-size: 11px; background: #f8f8f8;">
-            ⚠️ Understaffed / ✅ OK alternating here
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+ <!-- Gantt Chart Section -->
+<div class="gantt-container">
+  <h2>Lunes</h2>
+  <table class="gantt-table">
+    <thead>
+      <tr>
+        <th>Employee</th>
+        <th>Hr</th>
+        <th>BH</th>
+        <!-- Hours 06 to 05 -->
+        ${[...Array(24)].map((_, i) => `<th>${(6 + i) % 24}</th>`).join("")}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Aitana Lopez</strong></td>
+        <td>4.5</td>
+        <td>32</td>
+        ${[...Array(24)].map((_, i) =>
+          i === 6
+            ? `<td colspan="3" class="shift-cell" style="position: relative;" ondragover="event.preventDefault()" ondrop="drop(event)">
+                <div class="shift-bar" draggable="true" ondragstart="drag(event)" id="shift1">3h X</div>
+              </td>`
+            : i > 6 && i < 9 ? "" : `<td></td>`
+        ).join("")}
+      </tr>
+      <tr>
+        <td><strong>Ariadna Cavajal</strong></td>
+        <td>3.0</td>
+        <td>20</td>
+        ${[...Array(24)].map((_, i) =>
+          i === 9
+            ? `<td colspan="5" class="shift-cell" style="position: relative;" ondragover="event.preventDefault()" ondrop="drop(event)">
+                <div class="shift-bar" draggable="true" ondragstart="drag(event)" id="shift2">5h X</div>
+              </td>`
+            : i > 9 && i < 14 ? "" : `<td></td>`
+        ).join("")}
+      </tr>
+      <tr>
+        <td><strong>Demand</strong></td>
+        <td colspan="26" style="text-align: center; font-size: 11px; background: #f8f8f8;">
+          ⚠️ Understaffed / ✅ OK alternating here
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-  <script>
-    function handleClick(week) {
-      alert("Clicked on " + week);
-    }
+<style>
+  .gantt-container {
+    margin-top: 60px;
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
 
-    function drag(ev) {
-      ev.dataTransfer.setData("text", ev.target.id);
-    }
+  .gantt-table {
+    border-collapse: collapse;
+    min-width: 1200px;
+    width: max-content;
+  }
 
-    function drop(ev) {
-      ev.preventDefault();
-      const data = ev.dataTransfer.getData("text");
-      const dragged = document.getElementById(data);
+  .gantt-table th, .gantt-table td {
+    border: 1px solid #ddd;
+    padding: 6px;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .gantt-table th {
+    background: #f0f0f0;
+    font-weight: bold;
+  }
+
+  .shift-bar {
+    background: #ffe28a;
+    height: 20px;
+    border-radius: 4px;
+    cursor: grab;
+    text-align: center;
+    font-size: 11px;
+    padding-top: 2px;
+  }
+</style>
+
+<script>
+  function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+  }
+
+  function drop(ev) {
+    ev.preventDefault();
+    const data = ev.dataTransfer.getData("text");
+    const dragged = document.getElementById(data);
+    if (dragged && ev.target.classList.contains("shift-cell")) {
       ev.target.appendChild(dragged);
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
 """
