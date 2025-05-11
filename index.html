@@ -172,39 +172,57 @@
 
     </div>
   </div>
-<h2 style="margin: 60px 0 16px 20px;">Daily Gantt Timeline</h2>
+  <!-- 🔽 INSERT THE GANTT COMPONENT HERE 🔽 -->
+<h2 style="margin-top: 60px; margin-left: 20px;">Lunes</h2>
 <div style="overflow-x: auto; padding: 0 20px;">
-  <div style="display: grid; grid-template-columns: 150px repeat(18, 80px); border: 1px solid #ddd; min-width: max-content;">
-
-    <!-- Time Header Row -->
-    <div style="background: #f0f0f0; font-weight: bold;">Employee</div>
-    <div style="grid-column: span 18; display: contents;">
-      <!-- Hours 6 AM – 12 AM -->
-      ${[...Array(18)].map((_, i) => `<div style="text-align:center; font-size:12px; padding: 6px; background:#f0f0f0;">${6+i}:00</div>`).join("")}
-    </div>
-
-    <!-- Repeatable Employee Rows -->
-    ${[...Array(8)].map((_, row) => `
-      <div style="font-weight: bold; background: #fff; padding: 8px;">Employee ${row + 1}</div>
-      ${[...Array(18)].map((_, i) => {
-        // Add some demo shifts
-        if (i === 2 && row === 0) return `<div style="background: yellow; height: 100%; border: 1px solid #ccc;"></div>`
-        if (i === 6 && row === 2) return `<div style="background: green; height: 100%; border: 1px solid #ccc;"></div>`
-        if (i === 10 && row === 4) return `<div style="background: blue; height: 100%; border: 1px solid #ccc;"></div>`
-        return `<div style="border: 1px solid #eee;"></div>`
-      }).join("")}
-    `).join("")}
-
-    <!-- Demand Row -->
-    <div style="font-weight: bold; background: #fafafa; padding: 6px;">Demand</div>
-    ${[...Array(18)].map((_, i) => `
-      <div style="text-align:center; font-size:11px; background: ${i % 4 === 0 ? '#ffe0e0' : '#e0ffe0'};">
-        ${i % 4 === 0 ? '⚠️ Under' : '✅ OK'}
-      </div>
-    `).join("")}
-
-  </div>
+  <table style="border-collapse: collapse; font-family: Arial, sans-serif; min-width: 1000px;">
+    <thead>
+      <tr>
+        <th style="background: #f0f0f0; padding: 4px 8px; text-align: left;">Colaboradores</th>
+        <th style="background: #f0f0f0;">Hr.</th>
+        <th style="background: #f0f0f0;">BH</th>
+        <!-- Hour headers -->
+        ${[...Array(24)].map((_, i) => `
+          <th style="font-size: 11px; background: #f0f0f0; padding: 2px;">${(i + 6) % 24}:00</th>
+        `).join('')}
+      </tr>
+    </thead>
+    <tbody>
+      ${[
+        "David Martinez", "Juan Carlos", "Aitana Lopez", "Ariadna Cavajal", "Samuel Guzman", "Samuel Ficticio"
+      ].map((name, rowIndex) => `
+        <tr>
+          <td style="font-weight: bold; padding: 4px 8px;">${name}</td>
+          <td style="text-align: center;">${Math.floor(Math.random() * 6)}</td>
+          <td style="text-align: center;">${Math.floor(20 + Math.random() * 20)}</td>
+          ${[...Array(24)].map((_, hour) => {
+            if ((rowIndex === 2 && hour === 7) || (rowIndex === 3 && hour === 9)) {
+              return `<td colspan="3" style="background: #ffec99; border: 1px solid #e6e6e6; text-align: center; font-size: 11px;">${hour === 7 ? '3h X' : '5h X'}</td>`;
+            }
+            return `<td style="border: 1px solid #f0f0f0;"></td>`;
+          }).join('').slice(0, 24 * 58)} <!-- slice to limit overflow -->
+        </tr>
+      `).join('')}
+      <!-- Total row -->
+      <tr>
+        <td style="font-weight: bold; background: #f9f9f9;">Total:</td>
+        <td colspan="2"></td>
+        ${[...Array(24)].map(() => `
+          <td style="text-align: center; font-size: 11px; background: #f2f2f2;">${Math.floor(Math.random() * 5)}</td>
+        `).join('')}
+      </tr>
+      <!-- Staff planning row -->
+      <tr>
+        <td style="font-weight: bold; background: #f9f9f9;">Staff Planning</td>
+        <td colspan="2"></td>
+        ${[...Array(24)].map(() => `
+          <td style="text-align: center; font-size: 11px; background: #e6f7ff;">${Math.floor(Math.random() * 5)}</td>
+        `).join('')}
+      </tr>
+    </tbody>
+  </table>
 </div>
+<!-- 🔽 Ending THE GANTT COMPONENT HERE 🔽 -->
 
 </script>
 </body>
