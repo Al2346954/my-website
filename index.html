@@ -242,7 +242,7 @@
         eventResize: function(info) {
           database.ref("events/" + info.event.id).set(info.event.toPlainObject());
         },
-       selectable: true,
+selectable: true,
 select: function(info) {
   const newId = Date.now().toString();
   const newEvent = {
