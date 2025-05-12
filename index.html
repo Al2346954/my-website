@@ -242,19 +242,21 @@
         eventResize: function(info) {
           database.ref("events/" + info.event.id).set(info.event.toPlainObject());
         },
-        dateClick: function(info) {
-          const newId = Date.now().toString();
-          const newEvent = {
-            id: newId,
-            title: "New Shift",
-            start: info.dateStr,
-            end: new Date(new Date(info.date).getTime() + 2 * 60 * 60 * 1000).toISOString(),
-            resourceId: 'a',
-            color: '#FACC15'
-          };
-          database.ref("events/" + newId).set(newEvent);
-          calendar.addEvent(newEvent);
-        }
+       selectable: true,
+select: function(info) {
+  const newId = Date.now().toString();
+  const newEvent = {
+    id: newId,
+    title: "New Shift",
+    start: info.startStr,
+    end: info.endStr,
+    resourceId: info.resource.id,
+    color: '#FACC15'
+  };
+  database.ref("events/" + newId).set(newEvent);
+  calendar.addEvent(newEvent);
+}
+
       });
 
       calendar.render();
