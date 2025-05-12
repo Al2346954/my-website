@@ -4,208 +4,33 @@
   <meta charset="UTF-8" />
   <title>Weekly Summary Dashboard</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      padding: 40px;
-      margin: 0;
-    }
-
-    .grid {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 20px;
-      justify-content: flex-start;
-      overflow-x: auto;
-    }
-
-    .card {
-      background: white;
-      width: 280px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      cursor: pointer;
-      transition: box-shadow 0.2s ease;
-      flex-shrink: 0;
-    }
-
-    .card:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .card-header {
-      background: #fff;
-      padding: 12px 16px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .card-header h2 {
-      font-size: 16px;
-      margin: 0;
-    }
-
-    .card-header p {
-      margin: 0;
-      font-size: 11px;
-      color: #777;
-    }
-
-    .card-body {
-      padding: 12px 16px;
-      max-height: 240px;
-      overflow-y: auto;
-    }
-
-    .section {
-      margin-bottom: 16px;
-    }
-
-    .section h3 {
-      margin-bottom: 6px;
-      font-size: 13px;
-      color: #444;
-    }
-
-    .grid-3 {
-      display: flex;
-      gap: 10px;
-    }
-
-    .grid-3 > div {
-      flex: 1;
-    }
-
-    .label {
-      font-size: 11px;
-      color: #999;
-    }
-
-    .value {
-      font-weight: bold;
-      font-size: 13px;
-    }
-
-    .event {
-      display: flex;
-      gap: 8px;
-      border-bottom: 1px solid #eee;
-      padding: 6px 0;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-top: 5px;
-      flex-shrink: 0;
-    }
-
-    .green { background: #28a745; }
-    .orange { background: #fd7e14; }
-
-    .event-title {
-      font-weight: bold;
-      font-size: 13px;
-    }
-
-    .event-detail {
-      font-size: 11px;
-      color: #666;
-    }
-
-    /* Gantt */
-    .gantt-container {
-      margin-top: 60px;
-      overflow-x: auto;
-      background: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .gantt-table {
-      border-collapse: collapse;
-      min-width: 1200px;
-      width: max-content;
-    }
-
-    .gantt-table th, .gantt-table td {
-      border: 1px solid #ddd;
-      padding: 6px;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    .gantt-table th {
-      background: #f0f0f0;
-      font-weight: bold;
-    }
-
-    .shift-bar {
-      background: #ffe28a;
-      height: 20px;
-      border-radius: 4px;
-      cursor: grab;
-      text-align: center;
-      font-size: 11px;
-      padding-top: 2px;
-    }
+    /* ... [your entire style block stays unchanged] ... */
   </style>
 
-  <!-- 🔌 Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.7.1/firebase-database.js"></script>
+  <!-- ✅ Firebase SDK (v8.x - works directly in browser) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- ✅ FullCalendar + Scheduler -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.9/index.global.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.9/index.global.min.js"></script>
 </head>
 
 <body>
   <div class="grid">
     <script>
-      const weeks = [
-        { week: 14, date: "Apr 1 – Apr 7" },
-        { week: 15, date: "Apr 8 – Apr 14" },
-        { week: 16, date: "Apr 15 – Apr 21" },
-        { week: 17, date: "Apr 22 – Apr 28" },
-        { week: 18, date: "Apr 29 – May 5" },
-        { week: 19, date: "May 6 – May 12" },
-        { week: 20, date: "May 13 – May 19" },
-        { week: 21, date: "May 20 – May 26" },
-        { week: 22, date: "May 27 – Jun 2" },
-        { week: 23, date: "Jun 3 – Jun 9" },
-        { week: 24, date: "Jun 10 – Jun 16" },
-        { week: 25, date: "Jun 17 – Jun 23" },
-        { week: 26, date: "Jun 24 – Jun 30" }
-      ];
-
+      const weeks = [ /* ... your weeks array ... */ ];
       weeks.forEach(({ week, date }) => {
         document.write(`
-          <div class="card" onclick="handleClick('Week ${week}')">
+          <div class="card">
             <div class="card-header">
               <h2>Week ${week}</h2>
               <p>${date}</p>
             </div>
             <div class="card-body">
-              <div class="section">
-                <h3>Workforce</h3>
-                <div class="grid-3">
-                  <div><p class="label">Forecasted</p><p class="value">336h</p></div>
-                  <div><p class="label">Scheduled</p><p class="value">328h</p></div>
-                  <div><p class="label">Delta</p><p class="value" style="color: orange;">-8h</p></div>
-                </div>
-              </div>
-              <div class="section">
-                <h3>Revenue</h3>
-                <div class="grid-3">
-                  <div><p class="label">Forecast</p><p class="value">€108,750</p></div>
-                  <div><p class="label">Realized</p><p class="value">€110,200</p></div>
-                  <div><p class="label">Progression</p><p class="value" style="color: green;">+1.3%</p></div>
-                </div>
-              </div>
-              <div class="section">
-                <h3>Events</h3>
-                <div class="event"><div class="dot green"></div><div><div class="event-title">Golden day</div><div class="event-detail">Tuesday</div></div></div>
-                <div class="event"><div class="dot orange"></div><div><div class="event-title">Delivery</div><div class="event-detail">Wednesday</div></div></div>
-              </div>
+              <!-- ... your metrics and events markup ... -->
             </div>
           </div>
         `);
@@ -213,99 +38,9 @@
     </script>
   </div>
 
-  <!-- Gantt Chart Section -->
-<!-- Gantt Calendar Styling & Scripts -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.css" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.9/index.global.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.9/index.global.min.js"></script>
+  <div id="timeline-calendar" style="max-width: 100%; margin: 40px auto;"></div>
 
-<div id="timeline-calendar" style="max-width: 100%; margin: 40px auto;"></div>
-
-<script>
-  // ✅ Move FullCalendar inside the Firebase init logic
-  const firebaseConfig = {
-    apiKey: "AIzaSyC62PkU41k8sLJbDX_IuI50rU94oZ4x0Ps",
-    authDomain: "scheduler-1d938.firebaseapp.com",
-    databaseURL: "https://scheduler-1d938-default-rtdb.firebaseio.com",
-    projectId: "scheduler-1d938",
-    storageBucket: "scheduler-1d938.appspot.com",
-    messagingSenderId: "222035098575",
-    appId: "1:222035098575:web:a9e63b9f0ee5a7964530ba",
-    measurementId: "G-2D5EPEZSN3"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
-
-  document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('timeline-calendar');
-    if (!calendarEl) return console.error("❌ timeline-calendar not found");
-
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-      initialView: 'resourceTimelineDay',
-      height: 'auto',
-      now: '2024-05-01',
-      slotMinTime: "06:00:00",
-      slotMaxTime: "24:00:00",
-      resourceAreaHeaderContent: 'Colaboradores',
-      resourceAreaWidth: '20%',
-      headerToolbar: {
-        left: '',
-        center: 'title',
-        right: ''
-      },
-      resources: [
-        { id: 'a', title: 'Aitana Lopez' },
-        { id: 'b', title: 'Ariadna Cavajal' },
-        { id: 'c', title: 'David Martinez' },
-        { id: 'd', title: 'Juan Carlos' },
-        { id: 'e', title: 'Samuel Guzman' },
-        { id: 'f', title: 'Samuel Ficticio' }
-      ],
-      events: function(fetchInfo, successCallback, failureCallback) {
-        database.ref("events").once("value")
-          .then(snapshot => {
-            const data = snapshot.val() || {};
-            const events = Object.values(data);
-            console.log("✅ Loaded events:", events);
-            successCallback(events);
-          })
-          .catch(error => {
-            console.error("❌ Firebase error:", error);
-            failureCallback(error);
-          });
-      },
-      editable: true,
-      eventDrop: function(info) {
-        database.ref("events/" + info.event.id).set(info.event.toPlainObject());
-      },
-      eventResize: function(info) {
-        database.ref("events/" + info.event.id).set(info.event.toPlainObject());
-      },
-      dateClick: function(info) {
-        const newId = Date.now().toString();
-        const newEvent = {
-          id: newId,
-          title: "New Shift",
-          start: info.dateStr,
-          end: new Date(new Date(info.date).getTime() + 2 * 60 * 60 * 1000).toISOString(),
-          resourceId: 'a',
-          color: '#FACC15'
-        };
-        database.ref("events/" + newId).set(newEvent);
-        calendar.addEvent(newEvent);
-      }
-    });
-
-    calendar.render();
-  });
-</script>
-
-
-
-  <!-- Firebase Configuration & Init -->
+  <!-- ✅ Firebase Init + Gantt Logic (no duplicate config, no ES module syntax) -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyC62PkU41k8sLJbDX_IuI50rU94oZ4x0Ps",
@@ -320,7 +55,66 @@
 
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-  </script>
 
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendarEl = document.getElementById('timeline-calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+        initialView: 'resourceTimelineDay',
+        height: 'auto',
+        now: '2024-05-01',
+        slotMinTime: "06:00:00",
+        slotMaxTime: "24:00:00",
+        resourceAreaHeaderContent: 'Colaboradores',
+        resourceAreaWidth: '20%',
+        headerToolbar: {
+          left: '',
+          center: 'title',
+          right: ''
+        },
+        resources: [
+          { id: 'a', title: 'Aitana Lopez' },
+          { id: 'b', title: 'Ariadna Cavajal' },
+          { id: 'c', title: 'David Martinez' },
+          { id: 'd', title: 'Juan Carlos' },
+          { id: 'e', title: 'Samuel Guzman' },
+          { id: 'f', title: 'Samuel Ficticio' }
+        ],
+        events: function(fetchInfo, successCallback, failureCallback) {
+          database.ref("events").once("value")
+            .then(snapshot => {
+              const data = snapshot.val() || {};
+              successCallback(Object.values(data));
+            })
+            .catch(error => {
+              console.error("❌ Firebase read failed:", error);
+              failureCallback(error);
+            });
+        },
+        editable: true,
+        eventDrop: function(info) {
+          database.ref("events/" + info.event.id).set(info.event.toPlainObject());
+        },
+        eventResize: function(info) {
+          database.ref("events/" + info.event.id).set(info.event.toPlainObject());
+        },
+        dateClick: function(info) {
+          const newId = Date.now().toString();
+          const newEvent = {
+            id: newId,
+            title: "New Shift",
+            start: info.dateStr,
+            end: new Date(new Date(info.date).getTime() + 2 * 60 * 60 * 1000).toISOString(),
+            resourceId: 'a',
+            color: '#FACC15'
+          };
+          database.ref("events/" + newId).set(newEvent);
+          calendar.addEvent(newEvent);
+        }
+      });
+
+      calendar.render();
+    });
+  </script>
 </body>
 </html>
