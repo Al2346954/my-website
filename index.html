@@ -183,6 +183,8 @@
 
   <!-- Gantt -->
   <div id="timeline-calendar" style="max-width: 100%; margin: 60px auto;"></div>
+  <button id="save-button" style="margin: 20px auto; display: block;">Save Changes</button>
+
 
   <script>
     const firebaseConfig = {
@@ -236,6 +238,12 @@
             });
         },
         editable: true,
+        eventClick: function(info) {
+  calendar.getEvents().forEach(e => e.setProp("borderColor", ""));
+  info.event.setProp("borderColor", "black");
+  calendar.setOption("selectedEventId", info.event.id);
+},
+
         eventDrop: function(info) {
           database.ref("events/" + info.event.id).set(info.event.toPlainObject());
         },
@@ -268,6 +276,20 @@ select: function(info) {
       });
 
       calendar.render();
+      document.addEventListener("keydown", function (e) {
+  if (e.key === "Delete") {
+    const selectedId = calendar.getOption("selectedEventId");
+    if (selectedId) {
+      const event = calendar.getEventById(selectedId);
+      if (event) {
+        event.remove();
+        database.ref("events/" + selectedId).remove();
+        calendar.setOption("selectedEventId", null);
+      }
+    }
+  }
+});
+
     });
   </script>
 </body>
