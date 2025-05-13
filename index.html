@@ -253,13 +253,15 @@ select: function(info) {
     resourceId: info.resource.id,
     color: '#FACC15'
   };
-  database.ref("events/" + newId).set(newEvent)
-    .then(() => {
-      calendar.addEvent(newEvent);
-    })
-    .catch(error => {
-      console.error("❌ Error writing to Firebase:", error);
-    });
+
+  // Save to Firebase, then only render if it works
+  database.ref("events/" + newId).set(newEvent, function(error) {
+    if (error) {
+      console.error("❌ Error saving to Firebase:", error);
+    } else {
+      calendar.addEvent(newEvent); // ✅ only render if DB write succeeds
+    }
+  });
 }
 
 
