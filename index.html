@@ -253,9 +253,15 @@ select: function(info) {
     resourceId: info.resource.id,
     color: '#FACC15'
   };
-  database.ref("events/" + newId).set(newEvent);
-  calendar.addEvent(newEvent);
+  database.ref("events/" + newId).set(newEvent)
+    .then(() => {
+      calendar.addEvent(newEvent);
+    })
+    .catch(error => {
+      console.error("❌ Error writing to Firebase:", error);
+    });
 }
+
 
       });
 
